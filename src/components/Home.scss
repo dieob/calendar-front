@@ -1,0 +1,33 @@
+.calendar-container{
+    display: grid;
+
+    grid-template-rows: repeat(5, 5rem);
+    grid-template-columns: repeat(7, 1fr);
+
+    grid-gap: 1rem;
+
+    margin: 2rem auto;
+    width: auto;
+    max-width: 80%;
+}
+
+.days-container{
+    display: grid;
+
+    grid-template-rows: repeat(1, 5rem);
+    grid-template-columns: repeat(7, 1fr);
+
+    margin: 2rem auto;
+    width: auto;
+    max-width: 80%;
+}
+
+.day-of-the-week{
+    height: auto;
+    transform: translateY(1rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: lightcoral;
+    font-size: 1.8rem;
+}

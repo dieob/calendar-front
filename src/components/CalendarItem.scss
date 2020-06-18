@@ -1,0 +1,12 @@
+.calendar-item{
+    background-color: lightblue;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.disabled-item{
+    background-color: rgba(190, 188, 188, 0.603);
+    color: transparent;
+}
