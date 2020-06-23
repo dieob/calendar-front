@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Modal } from 'react-responsive-modal';
+import { Modal as MainModal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
-import { Segment, Button, Icon } from 'semantic-ui-react';
+import { Segment, Button, Icon, Modal, Divider } from 'semantic-ui-react';
 
 import './CalendarItem.scss';
 
 function CalendarItem(props) {
 
     const [openModal, setOpenModal] = useState(null);
+    const [openConfirmation, setOpenConfirmation] = useState(false);
+    const [newAppointment, setNewAppointment] = useState([{time:0, people:0}])
 
     const onOpenModal = () => {
         setOpenModal(true)
@@ -17,32 +19,83 @@ function CalendarItem(props) {
         setOpenModal(false)
     }
 
+    const show = (appt) => {
+        setOpenConfirmation(true);
+        setNewAppointment(appt)
+    }
+
+    const close = () => setOpenConfirmation(false)
+
+    const submitAppt = (appt) => {
+        console.log('added');
+        setOpenConfirmation(false);
+        //add new appointment to appointments in the context
+    }
+
+    const cancelConfirmAppt = () => {
+        console.log('cancelled');
+        setOpenConfirmation(false);
+        //add new appointment to appointments in the context
+    }
+
     return (
         <>
             <div className={props.date > 0 ? 'calendar-item' : 'calendar-item disabled-item'} onClick={() => { onOpenModal() }}>
                 <p className={props.date === props.today ? 'today' : ''}>{props.date}</p>
             </div>
-            <Modal open={openModal} onClose={onCloseModal} blockScroll={false} animationDuration={700} center>
+            <MainModal open={openModal} onClose={onCloseModal} blockScroll={false} animationDuration={700} center>
                 <div className="appointment-modal">
                     <div className="modal-title">
-                        <p className="appointment-modal-gym">{props.gym}</p>
-                        <p className="appointment-modal-date">{props.date + '/' + props.month + '/' + props.year}</p>
+                        <div className="appointment-modal-gym">{props.gym}</div>
+                        <div className="appointment-modal-date">{props.date + '/' + props.month + '/' + props.year}</div>
                     </div>
                     <div>
-                        {props.appointments.map(appt => (
-                            <>
-                                <Segment disabled={ appt.people >= props.maxPeople}>
+                        {props.appointments.map((appt,index) => (
+                                <Segment key = {index} disabled={appt.people >= props.maxPeople}>
                                     <div className="segment-data">
                                         <div className="gym-times">{appt.time + ' a ' + (parseInt(appt.time) + 1) + ' hs'}</div>
                                         <div className="amount-people">{appt.people} <Icon name="user"></Icon></div>
-                                        <Button disabled={ appt.people >= props.maxPeople} raised circular icon='add'/>
+                                        <Button disabled={appt.people >= props.maxPeople} onClick={() => show(appt)} circular icon='add' />
                                     </div>
                                 </Segment>
-                            </>
                         ))}
                     </div>
+                    <Modal size='mini' open={openConfirmation} onClose={close}>
+                            <Modal.Header>Confirmar turno</Modal.Header>
+                            <Modal.Content>
+                                <div className="confirmation-container">
+                                    <div className="confirmation-name">
+                                        {props.user.name}
+                                    </div>
+                                    <Divider></Divider>
+                                    <div>
+                                        
+                                    </div>
+                                    <Divider></Divider>
+                                    <div className="confirmation-time">
+                                        {newAppointment.time + ' a ' + (parseInt(newAppointment.time) + 1) + ' hs'}
+                                    </div>
+                                </div>
+                            </Modal.Content>
+                            <Modal.Actions>
+                                <Button 
+                                    negative 
+                                    onClick={()=> cancelConfirmAppt()}
+                                    icon='delete'
+                                    labelPosition='right'
+                                    content='No'
+                                />
+                                <Button
+                                    onClick={() => submitAppt(newAppointment)}
+                                    positive
+                                    icon='checkmark'
+                                    labelPosition='right'
+                                    content='Si'
+                                />
+                            </Modal.Actions>
+                        </Modal>
                 </div>
-            </Modal>
+            </MainModal>
         </>
     );
 }

@@ -38,6 +38,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    margin: 2rem 0;
 }
 
 .appt-item{
@@ -102,4 +103,18 @@
 
 .remove{
     display: none;
+}
+
+.confirmation-container{
+display: flex;
+align-items: center;
+flex-direction: column;
+}
+
+.confirmation-name{
+text-decoration: underline;
+}
+
+.confirmation-time{
+
 }

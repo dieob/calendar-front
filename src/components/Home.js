@@ -6,7 +6,7 @@ function Home(){
 
         //gym and user details
         const [gym, setGym] = useState('Forever Fit')
-        const [user, setUser] = useState([{id:1, name:'diego baez'}])
+        const [user, setUser] = useState({id:1, name:'Diego Baez'})
         const [maxPeople, setMaxPeople] = useState(20)
         const [appointments, setAppointment] = useState([{time:10, people:1},{time:11, people:4},{time:12, people:20},{time:13, people:19}])
         
