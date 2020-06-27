@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState , useContext} from 'react';
 import { Modal as MainModal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import { Segment, Button, Icon, Modal, Divider } from 'semantic-ui-react';
+import {CalendarContext} from '../context/calendar-context';
 
 import './CalendarItem.scss';
 
@@ -10,6 +11,22 @@ function CalendarItem(props) {
     const [openModal, setOpenModal] = useState(null);
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const [newAppointment, setNewAppointment] = useState([{time:0, people:0}])
+
+    const [state, dispatch] = useContext(CalendarContext);
+
+    const addAppointment = appointmentObj => {
+        appointmentObj.people = appointmentObj.people + 1;
+
+        dispatch({
+            type: "ADD_APPOINTMENT",
+            payload: appointmentObj
+        });
+    };
+
+    const onAddAppointment = () => {
+        addAppointment(newAppointment);
+        setOpenConfirmation(false);
+    };
 
     const onOpenModal = () => {
         setOpenModal(true)
@@ -25,12 +42,6 @@ function CalendarItem(props) {
     }
 
     const close = () => setOpenConfirmation(false)
-
-    const submitAppt = (appt) => {
-        console.log('added');
-        setOpenConfirmation(false);
-        //add new appointment to appointments in the context
-    }
 
     const cancelConfirmAppt = () => {
         console.log('cancelled');
@@ -50,7 +61,7 @@ function CalendarItem(props) {
                         <div className="appointment-modal-date">{props.date + '/' + props.month + '/' + props.year}</div>
                     </div>
                     <div>
-                        {props.appointments.map((appt,index) => (
+                        {props.appointments.sort((a, b) => (a.time > b.time) ? 1 : -1).map((appt,index) => (
                                 <Segment key = {index} disabled={appt.people >= props.maxPeople}>
                                     <div className="segment-data">
                                         <div className="gym-times">{appt.time + ' a ' + (parseInt(appt.time) + 1) + ' hs'}</div>
@@ -65,7 +76,7 @@ function CalendarItem(props) {
                             <Modal.Content>
                                 <div className="confirmation-container">
                                     <div className="confirmation-name">
-                                        {props.user.name}
+                                        {props.user}
                                     </div>
                                     <Divider></Divider>
                                     <div>
@@ -86,7 +97,7 @@ function CalendarItem(props) {
                                     content='No'
                                 />
                                 <Button
-                                    onClick={() => submitAppt(newAppointment)}
+                                    onClick={() => onAddAppointment(newAppointment)}
                                     positive
                                     icon='checkmark'
                                     labelPosition='right'
